@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function MovieCard(props) {
   return (
     <div>
-      <Link to={`/discover/${props.imdbId}`}>
+      <Link to={`/movie/${props.imdbId}`}>
         <p>
           {props.movieTitle} ({props.releaseYear})
         </p>

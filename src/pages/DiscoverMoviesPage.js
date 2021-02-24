@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StatusText from "../components/StatusText";
 import MovieCard from "../components/MovieCard";
 import {
@@ -7,34 +7,60 @@ import {
   Route,
   Link,
   useParams,
+  useHistory,
 } from "react-router-dom";
 
 const axios = require("axios");
-const apiKey = 19062065;
 
-export default function AboutPage() {
+export default function DiscoverMoviesPage() {
   const [searchText, set_searchText] = useState("");
   const [searchingState, set_searchingState] = useState({
     status: "idle",
     movieDataList: [],
   });
 
-  const route_parameters = useParams();
-  console.log(route_parameters);
-  const search = async () => {
-    console.log("Todo search movies for:", searchText);
-    const queryParam = encodeURIComponent(searchText);
-    set_searchingState({ ...searchingState, status: "searching" });
+  const history = useHistory();
 
-    const data = await axios.get(
-      `https://omdbapi.com/?apikey=${apiKey}&s=${queryParam}`
-    );
-
-    set_searchingState({ status: "done", movieDataList: data.data.Search });
-    set_searchText("");
+  const navigateToSearch = () => {
+    const routeParam = encodeURIComponent(searchText);
+    history.push(`/discover/${routeParam}`); //pushing to a new page with this URL
   };
 
-  console.log(searchingState.movieDataList);
+  const route_parameters = useParams();
+  const searchedWords = route_parameters;
+  console.log(searchedWords);
+  const apiKey = 19062065;
+
+  useEffect(() => {
+    async function fetchData() {
+      console.log("Fetching data!");
+      set_searchingState({ ...searchingState, status: "searching" });
+
+      const res = await axios.get(
+        `http://www.omdbapi.com/?s=${searchedWords.searchtext}&apikey=${apiKey}`
+      );
+      set_searchingState({ status: "done", movieDataList: res.data.Search });
+      console.log("Done fetching!");
+      set_searchText("");
+    }
+    if (searchedWords.searchtext) {
+      //if searchtext is not undefined
+      fetchData();
+    }
+  }, [route_parameters]);
+
+  // const search = async () => {
+  //   console.log("Todo search movies for:", searchText);
+  //   const queryParam = encodeURIComponent(searchText);
+  //   set_searchingState({ ...searchingState, status: "searching" });
+
+  //   const data = await axios.get(
+  //     `https://omdbapi.com/?apikey=${apiKey}&s=${queryParam}`
+  //   );
+
+  //   set_searchingState({ status: "done", movieDataList: data.data.Search });
+  //   set_searchText("");
+  // };
 
   return (
     <div>
@@ -47,7 +73,7 @@ export default function AboutPage() {
             set_searchText(event.target.value);
           }}
         />
-        <button onClick={search}>Search</button>
+        <button onClick={navigateToSearch}>Search</button>
       </p>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {/* <StatusText state={searchingState} /> */}

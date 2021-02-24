@@ -16,16 +16,14 @@ export default function MoviePage() {
         `http://www.omdbapi.com/?i=${imdb_id}&apikey=${apiKey}`
       );
       set_movieData(res.data);
-      console.log("Done fetching!");
+      console.log("res", res);
+      console.log("res.data", res.data);
     }
     fetchData();
   }, [imdb_id]);
 
   console.log(movieData);
   console.log(movieData.Genre);
-
-  //   const movieGenreArray = movieData.Genre.split(",");
-  //   console.log(movieGenreArray);
 
   return (
     <div>
