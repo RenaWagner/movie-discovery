@@ -37,7 +37,7 @@ export default function DiscoverMoviesPage() {
       set_searchingState({ ...searchingState, status: "searching" });
 
       const res = await axios.get(
-        `http://www.omdbapi.com/?s=${searchedWords.searchtext}&apikey=${apiKey}`
+        `https://www.omdbapi.com/?s=${searchedWords.searchtext}&apikey=${apiKey}`
       );
       set_searchingState({ status: "done", movieDataList: res.data.Search });
       console.log("Done fetching!");
